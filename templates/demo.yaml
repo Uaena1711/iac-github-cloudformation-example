@@ -1,10 +1,10 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: iac-github CloudFormation demo — a single SSM parameter whose value comes from a NoEcho parameter.
+Description: iac-github CloudFormation demo — a single SSM parameter whose value comes from a NoEcho parameter. Shared by all environments.
 
 Parameters:
   EnvName:
     Type: String
-    Description: Environment label (non-secret; from parameters.json).
+    Description: Environment label (non-secret; from the per-env parameters.json).
   NoticeValue:
     Type: String
     NoEcho: true
@@ -20,7 +20,6 @@ Resources:
       Tags:
         managed_by: iac-github
         env: !Ref EnvName
-        reviewed: "verified"
 
 Outputs:
   ParameterName:

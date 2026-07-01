@@ -6,10 +6,14 @@ plan and `apply` executes it after the GitHub Environment gate.
 
 ```
 .github/workflows/cloudformation.yml   # dev + prod jobs -> cfn-env.yml@v2
+templates/demo.yaml                    # ONE shared template (referenced by every env, not copied)
 stacks/
-  dev/  { cfn-ci.env, cfn-params.env, template.yaml, parameters.json }
-  prod/ { cfn-ci.env, cfn-params.env, template.yaml, parameters.json }
+  dev/  { cfn-ci.env, cfn-params.env, parameters.json }
+  prod/ { cfn-ci.env, cfn-params.env, parameters.json }
 ```
+
+`cfn-ci.env` points `TEMPLATE` at the shared `templates/demo.yaml` (repo-root-relative); per-env
+differences live only in `parameters.json` (the `EnvName`) and the sensitive `cfn-params.env`.
 
 - **`cfn-ci.env`** — per-stack identity + deploy config (role, region, stack name, template,
   parameters). Parsed, never sourced. `SECRETS_PROVIDER=github` resolves `${REF}` from repo
