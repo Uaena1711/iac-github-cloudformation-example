@@ -1,0 +1,40 @@
+# Per-env consumer: one job per environment calling the catalog's cfn-env reusable workflow.
+# dev = auto (its Environment has no reviewers); prod = approval (its Environment has a reviewer).
+# The change set is the plan; apply executes it after the gate. Everything runs in the default
+# aws-cli container; the github provider resolves the sensitive param from a repo secret.
+name: cloudformation
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: deploy or destroy
+        type: choice
+        options: [deploy, destroy]
+        default: deploy
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  dev:
+    uses: Uaena1711/iac-github/.github/workflows/cfn-env.yml@v2
+    secrets: inherit
+    with:
+      dir: stacks/dev
+      environment: dev
+      default_region: us-east-1
+      mode: ${{ inputs.mode || 'deploy' }}
+
+  prod:
+    uses: Uaena1711/iac-github/.github/workflows/cfn-env.yml@v2
+    secrets: inherit
+    with:
+      dir: stacks/prod
+      environment: prod
+      default_region: us-east-1
+      mode: ${{ inputs.mode || 'deploy' }}

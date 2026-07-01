@@ -1,0 +1,26 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: iac-github CloudFormation demo — a single SSM parameter whose value comes from a NoEcho parameter.
+
+Parameters:
+  EnvName:
+    Type: String
+    Description: Environment label (non-secret; from parameters.json).
+  NoticeValue:
+    Type: String
+    NoEcho: true
+    Description: Sensitive value injected via cfn-params.env (from a GitHub secret).
+
+Resources:
+  DemoParam:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: !Sub '/iac-github/demo/cfn-${EnvName}'
+      Type: String
+      Value: !Ref NoticeValue
+      Tags:
+        managed_by: iac-github
+        env: !Ref EnvName
+
+Outputs:
+  ParameterName:
+    Value: !Ref DemoParam
