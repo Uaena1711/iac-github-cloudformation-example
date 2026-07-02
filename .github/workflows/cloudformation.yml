@@ -22,7 +22,7 @@ permissions:
 
 jobs:
   dev:
-    uses: Uaena1711/iac-github/.github/workflows/cfn-env.yml@v2
+    uses: Uaena1711/iac-github/.github/workflows/cfn-env.yml@feat/tool-images
     secrets: inherit
     with:
       dir: stacks/dev
@@ -31,7 +31,7 @@ jobs:
       mode: ${{ inputs.mode || 'deploy' }}
 
   prod:
-    uses: Uaena1711/iac-github/.github/workflows/cfn-env.yml@v2
+    uses: Uaena1711/iac-github/.github/workflows/cfn-env.yml@feat/tool-images
     secrets: inherit
     with:
       dir: stacks/prod
